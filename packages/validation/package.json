@@ -1,6 +1,6 @@
 {
   "name": "@radial/validation",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "dist/radial-validation.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@radial/helpers": "^0.1.6"
+    "@radial/helpers": "^0.1.7"
   },
   "directories": {
     "lib": "lib"
