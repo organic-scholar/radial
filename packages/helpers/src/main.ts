@@ -5,7 +5,6 @@ export {setIn} from './setIn';
 export function isBlank(val)
 {
     if(val === null || val === undefined) return true;
-    if(isNaN(val)) return true;
     if(typeof val === 'string' && val.length === 0) return true;
     if(Array.isArray(val) && val.length === 0) return true;
     return false;
