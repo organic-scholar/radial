@@ -6,13 +6,13 @@ export function isBlank(val)
 {
     if(val === null || val === undefined) return true;
     if(isNaN(val)) return true;
-    if(typeof val === 'string' && length === 0) return true;
+    if(typeof val === 'string' && val.length === 0) return true;
     if(Array.isArray(val) && val.length === 0) return true;
     return false;
 }
 export function isNil(val)
 {
-    return val === null || val === undefined;
+    return val === null || val === undefined || val === NaN;
 }
 export function getIn(obj, path){
     let p = path.split('.');
