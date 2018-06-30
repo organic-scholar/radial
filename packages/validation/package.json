@@ -1,0 +1,22 @@
+{
+  "name": "@radial/validation",
+  "version": "0.1.2",
+  "main": "dist/radial-validation.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc && rollup -c"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@radial/helpers": "0.0.3",
+    "rollup": "^0.62.0",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "devDependencies": {},
+  "directories": {
+    "lib": "lib"
+  },
+  "description": ""
+}
