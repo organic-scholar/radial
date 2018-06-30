@@ -1,6 +1,6 @@
 {
   "name": "@radial/helpers",
-  "version": "0.0.3",
+  "version": "0.1.4",
   "description": "",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
