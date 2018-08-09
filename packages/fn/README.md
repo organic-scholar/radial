@@ -22,7 +22,7 @@ $ npm install -g @radial/fn
 $ fn COMMAND
 running command...
 $ fn (-v|--version|version)
-@radial/fn/0.1.8 darwin-x64 node-v8.11.3
+@radial/fn/0.1.9 darwin-x64 node-v8.11.3
 $ fn --help [COMMAND]
 USAGE
   $ fn COMMAND
@@ -47,7 +47,7 @@ OPTIONS
   --type=client|server  [default: server]
 ```
 
-_See code: [src/commands/generate.ts](https://github.com/packages/fn/blob/v0.1.8/src/commands/generate.ts)_
+_See code: [src/commands/generate.ts](https://github.com/packages/fn/blob/v0.1.9/src/commands/generate.ts)_
 
 ## `fn help [COMMAND]`
 

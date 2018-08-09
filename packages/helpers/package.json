@@ -1,10 +1,11 @@
 {
   "name": "@radial/helpers",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "scripts": {},
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "gitHead": "5f1275a1238793293e3d6f8733a706187af649fe"
 }
