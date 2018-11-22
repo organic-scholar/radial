@@ -1,6 +1,6 @@
 {
   "name": "@radial/fn",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "bin": {
     "fn": "./bin/run"
   },
@@ -19,7 +19,7 @@
     "@oclif/dev-cli": "^1",
     "@types/chai": "^4",
     "@types/mocha": "^5",
-    "@types/node": "^10",
+    "@types/node": "^10.5.7",
     "@types/prop-types": "^15.5.4",
     "globby": "^8",
     "prop-types": "^15.6.2",
@@ -32,14 +32,13 @@
   "files": [
     "/bin",
     "/lib",
-    "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
   "homepage": "https://github.com/packages/fn",
   "keywords": [
     "oclif"
   ],
-  "license": "MIT",
+  "license": "ISC",
   "main": "lib/index.js",
   "oclif": {
     "commands": "./lib/commands",
@@ -50,13 +49,13 @@
   },
   "repository": "packages/fn",
   "scripts": {
-    "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
+    "postpack": "rm -f oclif.manifest.json",
     "posttest": "tsc -p . --noEmit",
-    "prepack": "rm -rf lib && tsc && oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
+    "prepack": "rm -rf lib && tsc && oclif-dev manifest && oclif-dev readme",
     "prepare": "rm -rf lib && tsc",
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md"
   },
   "types": "lib/index.d.ts",
-  "gitHead": "5f1275a1238793293e3d6f8733a706187af649fe"
+  "gitHead": "2f620a15c78158c0561b31bcb873496e91d49ce0"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@radial/validation",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "main": "dist/radial-validation.js",
   "types": "lib/index.d.ts",
   "scripts": {
@@ -20,5 +20,5 @@
     "rollup-plugin-commonjs": "^9.1.3",
     "rollup-plugin-node-resolve": "^3.3.0"
   },
-  "gitHead": "5f1275a1238793293e3d6f8733a706187af649fe"
+  "gitHead": "2f620a15c78158c0561b31bcb873496e91d49ce0"
 }
