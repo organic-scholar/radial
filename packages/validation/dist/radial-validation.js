@@ -22,6 +22,8 @@
         __extends(ValidationException, _super);
         function ValidationException(errors) {
             var _this = _super.call(this, 'validation errors') || this;
+            _this.statusCode = 422;
+            _this.type = 'Validation';
             _this.errors = errors;
             return _this;
         }
