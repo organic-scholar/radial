@@ -5,7 +5,11 @@ let setIn = setInMutable;
 export class ValidationException extends Error
 {
 
-    public errors:ValidationError | string[];
+    errors:ValidationError | string[];
+
+    statusCode = 422;
+
+    type = 'Validation';
 
     constructor(errors){
         super('validation errors');
