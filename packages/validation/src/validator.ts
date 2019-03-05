@@ -2,11 +2,13 @@ import {getIn, setInMutable} from "@radial/helpers";
 
 let setIn = setInMutable;
 
-export class ValidationException {
+export class ValidationException extends Error
+{
 
     public errors:ValidationError | string[];
 
     constructor(errors){
+        super('validation errors');
         this.errors = errors;
     }
 }
