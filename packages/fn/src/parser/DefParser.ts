@@ -1,23 +1,26 @@
-import { isArray } from "util";
+import { checkPropTypes } from 'prop-types';
 
 let typesAlias:{[key:string]:string} = {
     'String': 'string',
     'Int': 'number',
     'Boolean': 'boolean'
 }
-interface IPropDef
+export interface IPropDef
 {
     name:string;
-    type:string
+    type:string;
+    array:boolean;
+    optional: boolean;
 }
-interface ITypeDef {
+export interface ITypeDef {
     name:string;
     props:IPropDef[]
+    schema: any;
 }
-interface IServiceDef
+export interface IServiceDef
 {
     name: string,
-    returnType: string,
+    return: IPropDef,
     args:IPropDef[]
 }
 export interface ISrvDefinition
@@ -44,7 +47,8 @@ export class DefParser
         {
             let typeDef:ITypeDef = {
                 name: type,
-                props: []
+                props: [],
+                schema: {}
             };
             let typeOpts = types[type];
             let propDefs = Object.keys(typeOpts).map((name)=>
@@ -52,6 +56,7 @@ export class DefParser
                 return this.parseProp(typeOpts[name], name, typeNames);
             });
             typeDef.props = propDefs;
+            typeDef.schema = this.generateSchema(propDefs);
             return typeDef;
         })
     }
@@ -60,9 +65,10 @@ export class DefParser
         return Object.keys(services).map((srvName)=>
         {
             let srvOpts = services[srvName];
-            let returnType = srvOpts.return || '';
-            if(returnType === '') throw new Error(`service ${srvName} return type if not defined`);
-            let returnTypeDef = returnType = this.parseProp(returnType, 'return', types);
+            let returnType = srvOpts['return'] || srvOpts['return?'] ||  null;
+            if(returnType === null) throw new Error(`service ${srvName} return type if not defined`);
+            let name = srvOpts['return'] ? 'return' : 'return?'
+            let returnTypeDef = returnType = this.parseProp(returnType, name, types);
             let argDefs = Object.keys(srvOpts.args || {}).map((arg)=>
             {
                 return this.parseProp(srvOpts.args[arg], arg, types);
@@ -70,7 +76,7 @@ export class DefParser
             let srvDef:IServiceDef = {
                 name: srvName,
                 args: argDefs,
-                returnType: returnTypeDef.type
+                return: returnTypeDef
             };
             return srvDef;
         })
@@ -79,7 +85,7 @@ export class DefParser
     parseProp(propType:any, name:string, types:string[]):IPropDef
     {
         let array = false;
-        if (isArray(propType))
+        if (Array.isArray(propType))
         {
             propType = propType[0];
             array = true;
@@ -87,8 +93,10 @@ export class DefParser
         this.typeExists(propType, types);
         propType = typesAlias[propType] || propType;
         return {
-            name: name,
-            type: array ? `${propType}[]` : propType
+            name: name.endsWith('?') ? name.slice(0,-1) :  name,
+            optional: name.endsWith('?'),
+            type: propType,
+            array: array
         };
     }
     typeExists(typeName:string, types:string[])
@@ -97,5 +105,35 @@ export class DefParser
         {
             throw new Error(`type ${typeName} is not defined`);
         }
+    }
+    generateSchema(props:IPropDef[])
+    {
+        let schema:any = {
+            type: "object",
+            properties: {},
+            required: []
+        };
+        props.forEach((prop)=>
+        {
+            if(prop.array)
+            {
+                let property = {
+                    type: 'array',
+                    items: {
+                        $ref: `#/definitions/${prop.type}`
+                    }
+                }
+                schema.properties[prop.name] = property;
+            }
+            else
+            {
+                let property = {
+                    type: `#/definitons/${prop.type}`
+                }
+                schema.properties[prop.name] = property;
+            }
+            if(prop.optional == false) schema.required.push(prop.name);
+        });
+
     }
 }

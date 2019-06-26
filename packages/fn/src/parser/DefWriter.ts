@@ -1,13 +1,12 @@
 import { ISrvDefinition } from './DefParser';
-import { Template } from './Templates';
-import * as ejs from 'ejs';
+import { template } from './Templates';
 import * as fs from 'fs';
 
 export class DefWriter
 {
     invoke(srvDef:ISrvDefinition, out:string)
     {
-        let content = ejs.render(Template, srvDef);
+        let content = template(srvDef);
         fs.writeFileSync(out, content);
    }
 }
