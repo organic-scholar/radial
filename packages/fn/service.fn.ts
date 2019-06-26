@@ -1,26 +1,24 @@
-interface User {
-    username: string
-    password: number
-    contact: Contact
+export let schema = {"definitions":{"string":{"type":"string"},"boolean":{"type":"boolean"},"number":{"type":"integer"},"User":{"type":"object","properties":{"username":{"$ref":"#/definitions/string"},"contact":{"$ref":"#/definitions/Contact"}},"required":["username","contact"]},"Contact":{"type":"object","properties":{"method":{"$ref":"#/definitions/string"}},"required":["method"]}}}
+
+interface User
+{
+    username:string
+    contact:Contact
 }
 
-interface Contact {
-    method: string
-    value: string[]
+interface Contact
+{
+    method:string
 }
 
-export abstract class GetUsers {
-    static serviceName = 'GetUsers';
-
-    static args = [];
-
-    public abstract invoke(): Promise<User[]>;
-}
-
-export abstract class GetUser {
+export abstract class GetUser
+{
     static serviceName = 'GetUser';
 
-    static args = [{ "name": "id", "optional": false, "type": "number", "array": false }];
+    static args = ["id"]
 
-    public abstract invoke(id: number): Promise<User>;
+    static argsSchema = {"type":"object","properties":{"id":{"$ref":"#/definitions/string"}},"required":["id"]};
+
+    public abstract invoke(id :string):Promise<User>;
 }
+        

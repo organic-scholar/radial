@@ -22,21 +22,25 @@ export interface IServiceDef
     name: string,
     return: IPropDef,
     args:IPropDef[]
+    argsSchema: any;
 }
 export interface ISrvDefinition
 {
     types: ITypeDef[];
     services: IServiceDef[];
+    schema:any;
 }
 
 export class DefParser
 {
     invoke(content:any)
     {
-        let types = Object.keys(content.Types);
+        let typeNames = Object.keys(content.Types);
+        let types = this.parseTypes(content.Types);
+        let services = this.parseServices(content.Services, typeNames);
+        let schema = this.generateDefinitionsSchema(types);
         let srvDefinition:ISrvDefinition = {
-            types: this.parseTypes(content.Types),
-            services: this.parseServices(content.Services, types)
+            types, services, schema, 
         };
         return srvDefinition;
     }
@@ -76,6 +80,7 @@ export class DefParser
             let srvDef:IServiceDef = {
                 name: srvName,
                 args: argDefs,
+                argsSchema: this.generateSchema(argDefs),
                 return: returnTypeDef
             };
             return srvDef;
@@ -106,6 +111,21 @@ export class DefParser
             throw new Error(`type ${typeName} is not defined`);
         }
     }
+    generateDefinitionsSchema(types:ITypeDef[])
+    {
+        let schema = {
+            definitions: {
+                'string': {type: 'string'},
+                'boolean': {type: 'boolean'},
+                'number': {type: 'integer'}
+            }
+        };
+        types.forEach((type)=>
+        {
+            schema.definitions[type.name] = type.schema;
+        });
+        return schema;
+    }
     generateSchema(props:IPropDef[])
     {
         let schema:any = {
@@ -128,12 +148,12 @@ export class DefParser
             else
             {
                 let property = {
-                    type: `#/definitons/${prop.type}`
+                    $ref: `#/definitions/${prop.type}`
                 }
                 schema.properties[prop.name] = property;
             }
             if(prop.optional == false) schema.required.push(prop.name);
         });
-
+        return schema;
     }
 }

@@ -4,3 +4,5 @@ packages/validation/node_modules
 packages/validation/lib
 
 lerna-debug.log
+
+.DS_Store

@@ -1,32 +1,36 @@
 import { ISrvDefinition, IPropDef } from './DefParser';
 
-
 export let template = (data:ISrvDefinition)=>
 {
+    let t = `export let schema = ${JSON.stringify(data.schema)}`;
+
+
     let t1 = data.types.map((type) =>
     {
         return `
-        interface ${type.name}
-        {
-            ${renderProps(type.props)}
-        }
-        `;
+interface ${type.name}
+{
+    ${renderProps(type.props)}
+}
+`;
     }).join('');
 
     let t2 = data.services.map((service)=>
     {
         return `
-        export abstract class ${service.name}
-        {
-            static serviceName = '${service.name}';
+export abstract class ${service.name}
+{
+    static serviceName = '${service.name}';
 
-            static args = ${JSON.stringify(service.args)};
+    static args = ${JSON.stringify(Object.keys(service.argsSchema.properties))}
 
-            public abstract invoke(${renderFuncArgs(service.args)}):${renderRetrunType(service.return)};
-        }
+    static argsSchema = ${JSON.stringify(service.argsSchema)};
+
+    public abstract invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)};
+}
         `;
     }).join('');
-    return [t1, t2].join('');
+    return [t, t1, t2].join('');
 }
 
 function renderProps(defs:IPropDef[])
@@ -45,9 +49,9 @@ function renderFuncArgs(defs:IPropDef[]):string
     }).join(', ')
 }
 
-function renderRetrunType(def:IPropDef):string
+function renderReturnType(def:IPropDef):string
 {
-    return `Promise<${def.type}${def.array ? '[]': ''} ${def.optional ? '| undefined' : ''}>`
+    return `Promise<${def.type}${def.array ? '[]': ''}${def.optional ? '| undefined' : ''}>`
 }
 
 

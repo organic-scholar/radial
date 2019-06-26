@@ -1,16 +1,16 @@
 Types:
   User:
     username: String
-    password: Int
+    # password: Int
     contact: Contact
   Contact:
     method: String
-    value: [String]
+    # value: [String]
 
 Services:
-  GetUsers:
-    return: [User]
+  # GetUsers:
+    # return: [User]
   GetUser: 
     args: 
-      id: Int
+      id: String
     return: User

@@ -1,0 +1,21 @@
+{
+  "name": "@radial/helpers",
+  "version": "0.1.9",
+  "description": "",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "gitHead": "2f620a15c78158c0561b31bcb873496e91d49ce0",
+  "dependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  },
+  "devDependencies": {
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  }
+}

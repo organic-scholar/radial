@@ -1,5 +1,6 @@
-import { isArray } from 'util';
-import { checkArgTypes } from './checkArgTypes';
+import * as Ajv from 'ajv';
+// import '../../service.fn'
+
 
 export class FnServer
 {
@@ -16,22 +17,21 @@ export class FnServer
         if(srv === '') return res.status(400).json({message: 'parameter srv is missing'});
         let Service = this.services[srv] || null;
         if(Service === null) return res.status(400).json({message: 'unable to resolve service ' + srv})
-        let args = this.getArgs(Service['args'], Service['defaultArgs'], req);
-        if(!isArray(args)) return res.status(400).json({message: `parameter ${args} is missing`})
-        let error = this.checkArgTypes(Service, args)
-        let instance = new Service();
-        instance.invoke.apply(instance, args).then((data)=>
-        {
-            res.status(200).json({data});
-        })
-        .catch((err)=>
-        {
-            res.status(err.status || 400).json({
-                message: err.message,
-                data: err.data || {}
-            })
-        })
-        ;
+        // new Ajv().addSchema(schema)
+        // let error = this.checkArgTypes(Service, args)
+        // let instance = new Service();
+        // instance.invoke.apply(instance, args).then((data)=>
+        // {
+        //     res.status(200).json({data});
+        // })
+        // .catch((err)=>
+        // {
+        //     res.status(err.status || 400).json({
+        //         message: err.message,
+        //         data: err.data || {}
+        //     })
+        // })
+        // ;
     }
     getArgs(args:string[], defaultArgs={}, req)
     {
@@ -54,6 +54,5 @@ export class FnServer
         {
             args[arg] = argValues[index];
         });
-        return checkArgTypes(Service.argTypes, args, 'arg', Service.name);
     }
 }
