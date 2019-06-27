@@ -3,6 +3,7 @@
     "declaration": true,
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
     "module": "commonjs",
     "outDir": "./lib",
     "noImplicitAny": false,
@@ -12,6 +13,6 @@
     "typeRoots": [ "./node_modules/@types" ]
   },
   "include": [
-    "./src/**/*"
+    "src", "test"
   ]
 }
