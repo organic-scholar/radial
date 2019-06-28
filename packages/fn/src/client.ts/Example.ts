@@ -25,7 +25,7 @@ export abstract class GetUser
         if(this.transaction)
         {
             let deferred =  new Deferred();
-            this.transaction.add({params: params, service: service}, deferred);
+            // this.transaction.add({params: params, service: service}, deferred);
             return deferred.promise;
         }
         

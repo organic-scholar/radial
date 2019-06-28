@@ -1,7 +1,8 @@
 import * as Ajv from 'ajv';
 import { ExceptionFormatter } from './ExceptionFormatter';
-import { MissingRequestParamException, ServiceNotFoundException, InvalidParametersException } from './Exceptions';
+import { MissingRequestParamException, ServiceNotFoundException, InvalidParametersException, InvalidReturnTypeException } from './Exceptions';
 import {Request, Response, NextFunction} from 'express';
+import {JSONSchema6} from 'json-schema';
 
 
 export class FnServer
@@ -12,13 +13,14 @@ export class FnServer
 
     ajv = new Ajv();
 
-    constructor(definitons:any)
+    constructor(protected schema:JSONSchema6)
     {
-
+        this.handle = this.handle.bind(this);
     }
-    register(serviceType)
+    add(serviceType:any)
     {
         this.services[serviceType.serviceName] = serviceType;
+        return this;
     }
     async handle(req:Request, res:Response, next:NextFunction)
     {
@@ -28,7 +30,10 @@ export class FnServer
             if(fn === null) throw new MissingRequestParamException('fn');
             if(fn.service == null) throw new MissingRequestParamException('service');
             if(fn.params == null) throw new MissingRequestParamException('params');
+            let Service = this.services[fn.service] || null;
+            if (Service == null) throw new ServiceNotFoundException(name);
             let result = await this.callService(fn.service, fn.params);
+            this.validateReturn(Service, result);
             res.status(200).json({data: result});
         }
         catch(error)
@@ -37,10 +42,8 @@ export class FnServer
             res.status(200).json({error: formatted});
         }
     }
-    callService(name:string, params:any)
+    callService(Service:any, params:any)
     {
-        let Service = this.services[name] || null;
-        if(Service == null) throw new ServiceNotFoundException(name);
         this.validateParams(Service, params);
         let args = Service.args.map((name:string)=>
         {
@@ -51,13 +54,24 @@ export class FnServer
     }
     validateParams(Service:any, params:any)
     {
-        let validate = this.ajv.compile(Object.assign(Service.argsSchema, params));
+        let validate = this.ajv.compile(Object.assign({}, this.schema, Service.argsSchema));
         validate(params);
         if(validate.errors == null) return;
         let message = validate.errors.map((error)=>
         {
-            return [error.dataPath, error.message].join(' ');
+            return ['param', error.dataPath, error.message].join(' ');
         }).join(', ');
         throw new InvalidParametersException(message)
+    }
+    validateReturn(Service:any, value:any)
+    {
+        let validate = this.ajv.compile(Object.assign({}, this.schema, Service.returnSchema));
+        validate({'return': value});
+        if(validate.errors == null) return;
+        let message = validate.errors.map((error)=>
+        {
+            return ['return', error.message].join(' ');
+        }).join(', ');
+        throw new InvalidReturnTypeException(message);
     }
 }

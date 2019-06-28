@@ -1,5 +1,3 @@
-import { checkPropTypes } from 'prop-types';
-
 let typesAlias:{[key:string]:string} = {
     'String': 'string',
     'Int': 'number',
@@ -20,9 +18,10 @@ export interface ITypeDef {
 export interface IServiceDef
 {
     name: string,
-    return: IPropDef,
     args:IPropDef[]
     argsSchema: any;
+    return: IPropDef,
+    returnSchema: any;
 }
 export interface ISrvDefinition
 {
@@ -81,7 +80,8 @@ export class DefParser
                 name: srvName,
                 args: argDefs,
                 argsSchema: this.generateSchema(argDefs),
-                return: returnTypeDef
+                return: returnTypeDef,
+                returnSchema: this.generateSchema([returnType])
             };
             return srvDef;
         })
@@ -135,22 +135,14 @@ export class DefParser
         };
         props.forEach((prop)=>
         {
+            let type = {$ref: `#/definitions/${prop.type}`}
             if(prop.array)
             {
-                let property = {
-                    type: 'array',
-                    items: {
-                        $ref: `#/definitions/${prop.type}`
-                    }
-                }
-                schema.properties[prop.name] = property;
+                schema.properties[prop.name] = {type: 'array', items: type};
             }
             else
             {
-                let property = {
-                    $ref: `#/definitions/${prop.type}`
-                }
-                schema.properties[prop.name] = property;
+                schema.properties[prop.name] = type;
             }
             if(prop.optional == false) schema.required.push(prop.name);
         });

@@ -8,7 +8,7 @@ export let template = (data:ISrvDefinition)=>
     let t1 = data.types.map((type) =>
     {
         return `
-interface ${type.name}
+export interface ${type.name}
 {
     ${renderProps(type.props)}
 }
@@ -25,6 +25,8 @@ export abstract class ${service.name}
     static args = ${JSON.stringify(Object.keys(service.argsSchema.properties))}
 
     static argsSchema = ${JSON.stringify(service.argsSchema)};
+
+    static returnSchema = ${JSON.stringify(service.returnSchema)}
 
     public abstract invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)};
 }

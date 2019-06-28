@@ -28,3 +28,14 @@ export class InvalidParametersException extends Error
     }
 
 }
+
+export class InvalidReturnTypeException extends Error
+{
+    type = 'Service';
+
+    constructor(message:string)
+    {
+        super(message);
+    }
+
+}
