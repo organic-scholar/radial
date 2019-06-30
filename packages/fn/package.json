@@ -1,6 +1,6 @@
 {
   "name": "@radial/fn",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "bin": {
     "fn": "./bin/run"
   },
