@@ -1,6 +1,6 @@
 {
   "name": "@radial/fn",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "bin": {
     "fn": "./bin/run"
   },
@@ -63,5 +63,5 @@
     "version": "oclif-dev readme && git add README.md"
   },
   "types": "lib/index.d.ts",
-  "gitHead": "16350926a59ea3dd1a49f37cfbb2044e2b6f9230"
+  "gitHead": "a5a01b0dc69d8039d6d64a270434f7af3500c2b8"
 }
