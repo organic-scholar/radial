@@ -22,7 +22,7 @@ $ npm install -g @radial/fn
 $ fn COMMAND
 running command...
 $ fn (-v|--version|version)
-@radial/fn/0.1.11 darwin-x64 node-v8.11.3
+@radial/fn/0.2.0 linux-x64 node-v8.15.0
 $ fn --help [COMMAND]
 USAGE
   $ fn COMMAND
@@ -31,23 +31,23 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`fn generate [FILE] [TYPE]`](#fn-generate-file-type)
+* [`fn generate [SRC]`](#fn-generate-src)
 * [`fn help [COMMAND]`](#fn-help-command)
 
-## `fn generate [FILE] [TYPE]`
+## `fn generate [SRC]`
 
 generates service definitions
 
 ```
 USAGE
-  $ fn generate [FILE] [TYPE]
+  $ fn generate [SRC]
 
 OPTIONS
-  --out=out
-  --type=client|server  [default: server]
+  --client
+  --out=out  [default: ./service.fn.ts]
 ```
 
-_See code: [src/commands/generate.ts](https://github.com/packages/fn/blob/v0.1.11/src/commands/generate.ts)_
+_See code: [src/commands/generate.ts](https://github.com/packages/fn/blob/v0.2.0/src/commands/generate.ts)_
 
 ## `fn help [COMMAND]`
 
