@@ -3,7 +3,6 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import { DefParser } from '../parser/DefParser';
-import { Server } from 'tls';
 import { DefWriter } from '../parser/DefWriter';
 
 export default class Generate extends Command
@@ -13,24 +12,28 @@ export default class Generate extends Command
   static examples = [];
 
   static flags = {
- }
+    client: flags.boolean(),
+    out: flags.string({default: './service.fn.ts'})
+  }
 
-  static args = [{name: 'file'}]
+  static args = [
+    {name: 'src', default: 'fn.yml'},
+  ];
 
   async run()
   {
     const {args, flags} = this.parse(Generate);
-    let filePath = path.resolve(process.cwd(), args.file || 'fn.yml');
+    let filePath = this.normalizePath(args.src);
     if(fs.existsSync(filePath) === false) this.error('service definition source not found');
     let content = fs.readFileSync(filePath).toString();
     let schema = yaml.load(content);
     let srvDef = new DefParser().invoke(schema);
-    let out = this.getOutPath(args);
-    new DefWriter().invoke(srvDef, out);
+    let out = this.normalizePath(flags.out);
+    let type = flags.client ? 'client' : 'server';
+    new DefWriter().invoke(srvDef, type, out);
   }
-  getOutPath(args:any)
+  normalizePath(seg?:string)
   {
-    if(args.out) return args.out;
-    return process.cwd() + '/service.fn.ts';
+    return path.resolve(process.cwd(),  seg || '');
   }
 }

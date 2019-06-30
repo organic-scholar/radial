@@ -1,8 +1,8 @@
 import { ISrvDefinition, IPropDef } from './DefParser';
 
-export let template = (data:ISrvDefinition)=>
+export let template = (data:ISrvDefinition, type:string)=>
 {
-    let t = `export let schema = ${JSON.stringify(data.schema)}`;
+    let t = type === 'server' ? `export let schema = ${JSON.stringify(data.schema)}` : '';
 
 
     let t1 = data.types.map((type) =>
@@ -32,7 +32,31 @@ export abstract class ${service.name}
 }
         `;
     }).join('');
-    return [t, t1, t2].join('');
+
+    let t3 = data.services.map((service)=>
+    {
+        return `
+export class ${service.name}
+{
+    static serviceName = '${service.name}';
+
+    static args = ${JSON.stringify(Object.keys(service.argsSchema.properties))}
+
+    constructor(public config:IRequestConfig|Transaction)
+    {
+
+    }
+    public invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)};
+    {
+        return callService(this, arguments);
+    }
+}
+`;
+    }).join('');
+    t3  = ["import {IRequestConfig, Transaction} from '@radial/client'", t3].join('\n');
+
+
+    return [t, t1, type === 'server' ? t2 : t3].join('');
 }
 
 function renderProps(defs:IPropDef[])

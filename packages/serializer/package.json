@@ -1,5 +1,5 @@
 {
-  "name": "@radial/helpers",
+  "name": "@radial/serializer",
   "version": "0.1.9",
   "description": "",
   "main": "lib/main.js",

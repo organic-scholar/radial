@@ -1,15 +1,22 @@
-import { IRequestParam, BatchRequest } from './Request';
+import { IRequestConfig, BatchServiceRequest } from './Request';
+import { ISrvRequestParam } from '../common/interfaces';
 
-interface ITransactionQueueItem {
-    param: IRequestParam;
+interface ITransactionQueueItem
+{
+    param: ISrvRequestParam;
     deferred: Deferred<object>;
 }
+
 
 export class Transaction
 {
     protected queue:ITransactionQueueItem[] = []
 
-    add(param:IRequestParam, deferred :Deferred<any>):void
+    constructor(public config:IRequestConfig)
+    {
+
+    }
+    add(param:ISrvRequestParam, deferred :Deferred<any>):void
     {
         this.queue.push({
             param, deferred
@@ -21,7 +28,7 @@ export class Transaction
         {
             return item.param;
         });
-        return new BatchRequest().invoke(params).then((results)=>
+        return new BatchServiceRequest().invoke(params, this.config).then((results)=>
         {
             results.forEach((result, index)=>
             {

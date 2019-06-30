@@ -1,3 +1,7 @@
+import { IRequestConfig } from '../src/client/Request';
+import { Transaction } from '../src/client/Transaction';
+import { callService } from '../src/client';
+
 export let schema = {"definitions":{"string":{"type":"string"},"boolean":{"type":"boolean"},"number":{"type":"integer"},"User":{"type":"object","properties":{"username":{"$ref":"#/definitions/string"},"contact":{"$ref":"#/definitions/Contact"}},"required":["username","contact"]},"Contact":{"type":"object","properties":{"method":{"$ref":"#/definitions/string"}},"required":["method"]}}}
 export interface User
 {
@@ -10,16 +14,18 @@ export interface Contact
     method:string
 }
 
-export abstract class GetUser
+export class GetUser
 {
     static serviceName = 'GetUser';
 
     static args = ["id"]
 
-    static argsSchema = {"type":"object","properties":{"id":{"$ref":"#/definitions/string"}},"required":["id"]};
+    constructor(public config:IRequestConfig|Transaction)
+    {
 
-    static returnSchema = {"type":"object","properties":{"return":{"$ref":"#/definitions/User"}},"required":["return"]}
-
-    public abstract invoke(id :string):Promise<User>;
+    }
+    public invoke(id :string):Promise<User>
+    {
+        return callService<User>(this, arguments);
+    }
 }
-        

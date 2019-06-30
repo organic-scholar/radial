@@ -2,8 +2,8 @@ import * as express from 'express';
 import * as http from 'http';
 import * as  morgan from 'morgan';
 import * as bodyParser from 'body-parser';
-import {FnServer} from '../src/server'
-import {schema, GetUser, User} from '../service.fn';
+import {FnServer} from '../src/server/base'
+import {schema, GetUser, User} from './fn.server';
 import { JSONSchema6 } from 'json-schema';
 
 let app = express();
@@ -17,7 +17,9 @@ class GetUserImpl extends GetUser
 	{
 		let user:User = {
 			username: 'nauman',
-			contact: {method: 'tel'}
+			contact: {
+				method: '1'
+			}
 		}
 		return Promise.resolve(user);
 	}
