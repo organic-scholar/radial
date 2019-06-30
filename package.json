@@ -1,5 +1,7 @@
 {
-	"devDependencies": {
-		"lerna": "^2.11.0"
-	}
+  "name": "root",
+  "private": true,
+  "devDependencies": {
+    "lerna": "^3.0.0-rc.0"
+  }
 }
