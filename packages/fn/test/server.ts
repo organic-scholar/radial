@@ -28,7 +28,7 @@ class GetUserImpl extends GetUser
 let fn = new FnServer(schema as JSONSchema6);
 fn.add(GetUserImpl);
 
-app.use('/api', fn.handle)
+// app.use('/api', fn.handle)
 
 let server = http.createServer(app);
 let port = 9000;
