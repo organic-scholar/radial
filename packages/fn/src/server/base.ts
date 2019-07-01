@@ -40,7 +40,7 @@ export class FnServer
         if (arg.service == null) throw new MissingRequestParamException('service');
         if (arg.params == null) throw new MissingRequestParamException('params');
         let Service = this.services[arg.service] || null;
-        if (Service == null) throw new ServiceNotFoundException(name);
+        if (Service == null) throw new ServiceNotFoundException(arg.service);
         this.validateParams(Service, arg.params);
         let args = Service.args.map((name:string)=>
         {
