@@ -5,6 +5,7 @@ import * as yaml from 'js-yaml';
 import { DefParser } from '../parser/DefParser';
 import { DefWriter } from '../parser/DefWriter';
 import fetch from 'node-fetch';
+import { DefsResolver } from '../parser/DefsResolver';
 
 export default class Generate extends Command
 {
@@ -24,9 +25,9 @@ export default class Generate extends Command
   async run()
   {
     const {args, flags} = this.parse(Generate);
-    let content = await this.readContent(args.src);
-    let schema = yaml.load(content);
-    let srvDef = new DefParser().invoke(schema);
+    let definition = await this.getContent(args.src);
+    definition = await new DefsResolver().invoke(definition, this.normalizePath(args.src) );
+    let srvDef = new DefParser().invoke(definition);
     let out = this.normalizePath(flags.out);
     let type = flags.client ? 'client' : 'server';
     new DefWriter().invoke(srvDef, type, out);
@@ -35,19 +36,19 @@ export default class Generate extends Command
   {
     return path.resolve(process.cwd(),  seg || '');
   }
-  readContent(path:string)
+  getContent(path:string)
   {
     if(path.startsWith('http'))
     {
       return fetch(path).then((res)=>
       {
-        return res.text()
+        return res.json()
       })
     }
     let filePath = this.normalizePath(path);
     if(fs.existsSync(filePath) === false) this.error('service definition source not found');
     let content = fs.readFileSync(filePath).toString();
-    return Promise.resolve(content);
+    return Promise.resolve(yaml.load(content));
 
   }
 }

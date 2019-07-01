@@ -1,3 +1,5 @@
+import { ISrvDescriptor, ISrvDefinition, ITypeDef, IServiceDef, IPropDef } from '../common/interfaces';
+
 let tsTypesAlias = {
     'integer': 'number',
 }
@@ -9,43 +11,16 @@ let schemaTypeAlias = {
 let jsonSchemaTypes = ['string', 'boolean', 'integer'];
 
 
-export interface IPropDef
-{
-    name:string;
-    type:string;
-    array:boolean;
-    optional: boolean;
-}
-export interface ITypeDef {
-    name:string;
-    props:IPropDef[]
-    schema: any;
-}
-export interface IServiceDef
-{
-    name: string,
-    args:IPropDef[]
-    argsSchema: any;
-    return: IPropDef,
-    returnSchema: any;
-}
-export interface ISrvDefinition
-{
-    types: ITypeDef[];
-    services: IServiceDef[];
-    schema:any;
-}
-
 export class DefParser
 {
-    invoke(content:any)
+    invoke(descriptor:ISrvDescriptor)
     {
-        let typeNames = Object.keys(content.Types);
-        let types = this.parseTypes(content.Types);
-        let services = this.parseServices(content.Services, typeNames);
+        let typeNames = Object.keys(descriptor.Types);
+        let types = this.parseTypes(descriptor.Types);
+        let services = this.parseServices(descriptor.Services, typeNames);
         let schema = this.generateDefinitionsSchema(types);
         let srvDefinition:ISrvDefinition = {
-            types, services, schema, 
+            types, services, schema, descriptor
         };
         return srvDefinition;
     }

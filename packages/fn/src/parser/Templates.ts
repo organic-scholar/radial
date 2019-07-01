@@ -1,9 +1,11 @@
-import { ISrvDefinition, IPropDef } from './DefParser';
+import { ISrvDefinition, IPropDef } from '../common/interfaces';
 
 export let template = (data:ISrvDefinition, type:string)=>
 {
-    let t = type === 'server' ? `export let schema = ${JSON.stringify(data.schema)}` : '';
+    let t0 = type === 'server' ? `export let metadata = ${JSON.stringify(data.descriptor)};` : '';
 
+    let t = type === 'server' ? `
+export let schema = ${JSON.stringify(data.schema)};` : '';
 
     let t1 = data.types.map((type) =>
     {
@@ -56,7 +58,7 @@ export class ${service.name}
     t3  = ["import {IRequestConfig, Transaction, callService} from '@radial/fn/lib/client'", t3].join('\n');
 
 
-    return [t, t1, type === 'server' ? t2 : t3].join('');
+    return [t0, t, t1, type === 'server' ? t2 : t3].join('');
 }
 
 function renderProps(defs:IPropDef[])

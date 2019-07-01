@@ -12,7 +12,7 @@ manufacturer:string
 companyId?:string
 locationId?:string
 }
-import {IRequestConfig, Transaction, callService} from '@radial/fn/lib/client'
+import {IRequestConfig, Transaction, callService} from '../src/client';
 
 export class RegisterDevice
 {

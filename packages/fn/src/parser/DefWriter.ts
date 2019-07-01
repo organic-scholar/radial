@@ -1,6 +1,6 @@
-import { ISrvDefinition } from './DefParser';
 import { template } from './Templates';
 import * as fs from 'fs';
+import { ISrvDefinition } from '../common/interfaces';
 
 
 export class DefWriter
