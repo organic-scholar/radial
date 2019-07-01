@@ -1,8 +1,14 @@
-let typesAlias:{[key:string]:string} = {
-    'String': 'string',
-    'Int': 'number',
-    'Boolean': 'boolean'
+let tsTypesAlias = {
+    'integer': 'number',
 }
+
+let schemaTypeAlias = {
+    'number': 'integer'
+}
+
+let jsonSchemaTypes = ['string', 'boolean', 'integer'];
+
+
 export interface IPropDef
 {
     name:string;
@@ -87,16 +93,16 @@ export class DefParser
         })
 
     }
-    parseProp(propType:any, name:string, types:string[]):IPropDef
+    parseProp(propType:string, name:string, types:string[]):IPropDef
     {
         let array = false;
-        if (Array.isArray(propType))
+        if (propType.endsWith('[]'))
         {
-            propType = propType[0];
+            propType = propType.replace('[]', '');
             array = true;
         }
         this.typeExists(propType, types);
-        propType = typesAlias[propType] || propType;
+        propType = tsTypesAlias[propType] || propType;
         return {
             name: name.endsWith('?') ? name.slice(0,-1) :  name,
             optional: name.endsWith('?'),
@@ -106,7 +112,7 @@ export class DefParser
     }
     typeExists(typeName:string, types:string[])
     {
-        if (types.indexOf(typeName) === -1 && Object.keys(typesAlias).indexOf(typeName) === -1)
+        if (types.indexOf(typeName) === -1 && jsonSchemaTypes.indexOf(typeName) === -1)
         {
             throw new Error(`type ${typeName} is not defined`);
         }
@@ -114,11 +120,7 @@ export class DefParser
     generateDefinitionsSchema(types:ITypeDef[])
     {
         let schema = {
-            definitions: {
-                'string': {type: 'string'},
-                'boolean': {type: 'boolean'},
-                'number': {type: 'integer'}
-            }
+            definitions: {}
         };
         types.forEach((type)=>
         {
@@ -135,14 +137,16 @@ export class DefParser
         };
         props.forEach((prop)=>
         {
-            let type = {$ref: `#/definitions/${prop.type}`}
+            let type = schemaTypeAlias[prop.type] || prop.type;
+            let isSchemaType = jsonSchemaTypes.indexOf(type) == -1;
+            let def =   isSchemaType ? {$ref: `#/definitions/${type}`} : {type: type}
             if(prop.array)
             {
-                schema.properties[prop.name] = {type: 'array', items: type};
+                schema.properties[prop.name] = {type: 'array', items: def};
             }
             else
             {
-                schema.properties[prop.name] = type;
+                schema.properties[prop.name] = def;
             }
             if(prop.optional == false) schema.required.push(prop.name);
         });
