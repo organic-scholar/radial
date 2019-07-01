@@ -1,31 +1,31 @@
-import { IRequestConfig } from '../src/client/Request';
-import { Transaction } from '../src/client/Transaction';
-import { callService } from '../src/client';
 
-export let schema = {"definitions":{"string":{"type":"string"},"boolean":{"type":"boolean"},"number":{"type":"integer"},"User":{"type":"object","properties":{"username":{"$ref":"#/definitions/string"},"contact":{"$ref":"#/definitions/Contact"}},"required":["username","contact"]},"Contact":{"type":"object","properties":{"method":{"$ref":"#/definitions/string"}},"required":["method"]}}}
-export interface User
+export interface Device
 {
-    username:string
-contact:Contact
+    id:string
+code:string
+deviceId:string
+osName:string
+osVersion:string
+model:string
+status:string
+manufacturer:string
+companyId?:string
+locationId?:string
 }
+import {IRequestConfig, Transaction, callService} from '@radial/fn/lib/client'
 
-export interface Contact
+export class RegisterDevice
 {
-    method:string
-}
+    static serviceName = 'RegisterDevice';
 
-export class GetUser
-{
-    static serviceName = 'GetUser';
-
-    static args = ["id"]
+    static args = ["deviceId","model","osName","osVersion","manufacturer"]
 
     constructor(public config:IRequestConfig|Transaction)
     {
 
     }
-    public invoke(id :string):Promise<User>
+    public invoke(deviceId :string, model :string, osName :string, osVersion :string, manufacturer :string):Promise<Device>
     {
-        return callService<User>(this, arguments);
+        return callService(this, arguments);
     }
 }

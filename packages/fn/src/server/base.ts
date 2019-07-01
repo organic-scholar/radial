@@ -1,7 +1,6 @@
 import * as Ajv from 'ajv';
 import { ExceptionFormatter } from './ExceptionFormatter';
 import { MissingRequestParamException, ServiceNotFoundException, InvalidParametersException, InvalidReturnTypeException } from './Exceptions';
-import {Request, Response, NextFunction} from 'express';
 import {JSONSchema6} from 'json-schema';
 import { ISrvRequestParam, IResponseResult } from '../common/interfaces';
 

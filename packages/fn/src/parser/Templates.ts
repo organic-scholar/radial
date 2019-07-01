@@ -22,7 +22,7 @@ export abstract class ${service.name}
 {
     static serviceName = '${service.name}';
 
-    static args = ${JSON.stringify(Object.keys(service.argsSchema.properties))}
+    static args = ${JSON.stringify(service.args.map((arg)=> arg.name))}
 
     static argsSchema = ${JSON.stringify(service.argsSchema)};
 
@@ -40,20 +40,20 @@ export class ${service.name}
 {
     static serviceName = '${service.name}';
 
-    static args = ${JSON.stringify(Object.keys(service.argsSchema.properties))}
+    static args = ${JSON.stringify(service.args.map((arg)=> arg.name))}
 
     constructor(public config:IRequestConfig|Transaction)
     {
 
     }
-    public invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)};
+    public invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)}
     {
         return callService(this, arguments);
     }
 }
 `;
     }).join('');
-    t3  = ["import {IRequestConfig, Transaction} from '@radial/client'", t3].join('\n');
+    t3  = ["import {IRequestConfig, Transaction, callService} from '@radial/fn/lib/client'", t3].join('\n');
 
 
     return [t, t1, type === 'server' ? t2 : t3].join('');
