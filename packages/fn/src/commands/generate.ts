@@ -26,7 +26,7 @@ export default class Generate extends Command
   {
     const {args, flags} = this.parse(Generate);
     let definition = await this.getContent(args.src);
-    definition = await new DefsResolver().invoke(definition, this.normalizePath(args.src) );
+    definition = await new DefsResolver().invoke(definition, this.normalizePath(path.dirname(args.src)));
     let srvDef = new DefParser().invoke(definition);
     let out = this.normalizePath(flags.out);
     let type = flags.client ? 'client' : 'server';
