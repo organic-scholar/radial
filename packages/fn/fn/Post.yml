@@ -1,0 +1,8 @@
+Types:
+  Post:
+    Title: string
+    Body: string
+
+Services:
+  GetPosts:
+    return: Post[]

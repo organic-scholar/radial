@@ -1,16 +1,3 @@
-Types:
-  User:
-    username: string
-    password: integer
-    contact: Contact
-  Contact:
-    method: string
-    value: string[]
-
-Services:
-  GetUsers:
-    return: User[]
-  GetUser: 
-    args: 
-      id: string
-    return: User
+imports:
+  - fn/Post.yml
+  - fn/User.yml
