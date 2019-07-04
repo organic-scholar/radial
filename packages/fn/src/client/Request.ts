@@ -5,7 +5,7 @@ export class NetworkError extends Error {
 
     type = 'NetworkError';
 
-    message = 'Unable to send request';
+    message = 'failed to send request';
 
 }
 
@@ -28,16 +28,19 @@ export class ServiceRequest
         rest  = {...rest, body: JSON.stringify({fn: param})}
         return fetch(url, rest).then((res)=>
         {
-            return res.json() as any;
+            return res.json() as IResponseResult<T>;
         })
-        .then((data)=>
+        .then((result)=>
         {
-            let result:IResponseResult<T> = data.result;
             if(result.data) return result.data;
             if(result.error) throw Object.assign(new Error(), result.error);
             throw new Error();
         }).catch((err)=>
         {
+            if(err.name === 'TypeError' && err.mesasge === 'Failed to fetch')
+            {
+
+            }
             return Promise.reject(new NetworkError());
         });
     }
@@ -51,11 +54,7 @@ export class BatchServiceRequest
         let {url, interceptors, ...rest} = config
         rest  = {...rest, body: JSON.stringify({fn: params})}
         return fetch(url, rest).then((res)=> res.json())
-        .then((data)=>
-        {
-            let result:IResponseResult[] = data.result;
-            return result;
-        }).catch(()=>
+        .catch(()=>
         {
             return Promise.reject(new NetworkError());
         });
