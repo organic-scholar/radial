@@ -24,13 +24,11 @@ export abstract class ${service.name}<T>
 {
     static serviceName = '${service.name}';
 
-    static args = ${JSON.stringify(service.args.map((arg)=> arg.name))}
-
-    static argsSchema = ${JSON.stringify(service.argsSchema)};
+    static argSchema = ${JSON.stringify(service.argSchema)};
 
     static returnSchema = ${JSON.stringify(service.returnSchema)}
 
-    public abstract invoke(${[renderFuncArgs(service.args), 'context:T'].filter(Boolean).join(',')}):${renderReturnType(service.return)};
+    public abstract invoke(${[renderProp(service.arg), 'context:T'].join(', ')}):${renderReturnType(service.return)};
 }
         `;
     }).join('');
@@ -42,15 +40,13 @@ export class ${service.name}
 {
     static serviceName = '${service.name}';
 
-    static args = ${JSON.stringify(service.args.map((arg)=> arg.name))}
-
     constructor(public config:IRequestConfig|Transaction)
     {
 
     }
-    public invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)}
+    public invoke(${renderProp(service.arg)}):${renderReturnType(service.return)}
     {
-        return callService(this, arguments);
+        return callService(this, arg);
     }
 }
 `;
@@ -59,6 +55,11 @@ export class ${service.name}
 
 
     return [t0, t, t1, type === 'server' ? t2 : t3].join('');
+}
+
+function renderProp(def:IPropDef)
+{
+    return `${def.name}${def.optional ? '?' : ''}:${def.type}${def.array ? '[]' : ''}`
 }
 
 function renderProps(defs:IPropDef[])

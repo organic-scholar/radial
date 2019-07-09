@@ -50,22 +50,16 @@ export class FnServer<T>
     async callService(arg:ISrvRequestParam, context:T):Promise<IResponseResult>
     {
         if (arg.service == null) throw new MissingRequestParamException('service');
-        if (arg.params == null) throw new MissingRequestParamException('params');
         let service = this.services[arg.service] || null;
         if (service == null) throw new ServiceNotFoundException(arg.service);
-        this.validateParams(service.constructor, arg.params);
-        let args = service.constructor.args.map((name:string)=>
-        {
-            return arg.params[name];
-        })
-        args.push(context);
-        let result = await service.invoke.apply(service, args);
+        this.validateParams(service.constructor, {arg: arg.param});
+        let result = await service.invoke.apply(service, [arg, context]);
         this.validateReturn(service.constructor, result);
         return result;
     }
     validateParams(Service:any, params:any)
     {
-        let validate = this.ajv.compile(Object.assign({}, this.schema, Service.argsSchema));
+        let validate = this.ajv.compile(Object.assign({}, this.schema, Service.argSchema));
         validate(params);
         if(validate.errors == null) return;
         let message = validate.errors.map((error)=>

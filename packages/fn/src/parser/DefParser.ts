@@ -1,4 +1,5 @@
 import { ISrvDescriptor, ISrvDefinition, ITypeDef, IServiceDef, IPropDef } from '../common/interfaces';
+import { JSONSchema6 } from 'json-schema';
 
 let tsTypesAlias = {
     'integer': 'number',
@@ -8,8 +9,7 @@ let schemaTypeAlias = {
     'number': 'integer'
 }
 
-let jsonSchemaTypes = ['string', 'boolean', 'integer'];
-
+let jsonSchemaTypes = ['string', 'boolean', 'integer', 'null'];
 
 export class DefParser
 {
@@ -51,16 +51,16 @@ export class DefParser
             let srvOpts = services[srvName];
             let returnType = srvOpts['return'] || srvOpts['return?'] ||  null;
             if(returnType === null) throw new Error(`service ${srvName} return type if not defined`);
-            let name = srvOpts['return'] ? 'return' : 'return?'
-            let returnTypeDef = returnType = this.parseProp(returnType, name, types);
-            let argDefs = Object.keys(srvOpts.args || {}).map((arg)=>
-            {
-                return this.parseProp(srvOpts.args[arg], arg, types);
-            })
+            let returnName = srvOpts['return'] ? 'return' : 'return?'
+            let returnTypeDef = returnType = this.parseProp(returnType, returnName, types);
+
+            let argType = srvOpts['arg'] ||  'null';
+            let argTypeDef = this.parseProp(argType, 'arg', types);
+
             let srvDef:IServiceDef = {
                 name: srvName,
-                args: argDefs,
-                argsSchema: this.generateSchema(argDefs),
+                arg: argTypeDef,
+                argSchema: this.generateSchema([argTypeDef]),
                 return: returnTypeDef,
                 returnSchema: this.generateSchema([returnType])
             };

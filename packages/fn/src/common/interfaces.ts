@@ -3,7 +3,7 @@ import { JSONSchema6 } from 'json-schema';
 export interface ISrvRequestParam
 {
     service:string;
-    params:object;
+    param:object;
 }
 export interface IResponseResult<T={}>
 {
@@ -42,15 +42,15 @@ export interface IPropDef
 export interface ITypeDef {
     name:string;
     props:IPropDef[]
-    schema: any;
+    schema: JSONSchema6;
 }
 export interface IServiceDef
 {
     name: string,
-    args:IPropDef[]
-    argsSchema: any;
+    arg:IPropDef
+    argSchema: JSONSchema6;
     return: IPropDef,
-    returnSchema: any;
+    returnSchema: JSONSchema6;
 }
 export interface ISrvDefinition
 {

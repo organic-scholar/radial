@@ -17,18 +17,15 @@ abstract class Service
 }
 
 
-export function callService<T>(instance:Service, args:IArguments)
+export function callService<T>(instance:Service, param:object)
 {
     let params: any = {};
     let service = instance.constructor['serviceName'];
-    instance.constructor['args'].forEach((name, index) => {
-        params[name] = args[index];
-    });
     if (instance.config instanceof Transaction)
     {
         let defer = new Deferred<T>();
-        instance.config.add({ params, service }, defer);
+        instance.config.add({ param, service }, defer);
         return defer.promise;
 
-    } return new ServiceRequest().invoke<T>({ service, params }, instance.config);
+    } return new ServiceRequest().invoke<T>({ service, param }, instance.config);
 }
