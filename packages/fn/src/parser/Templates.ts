@@ -20,7 +20,7 @@ export interface ${type.name}
     let t2 = data.services.map((service)=>
     {
         return `
-export abstract class ${service.name}
+export abstract class ${service.name}<T>
 {
     static serviceName = '${service.name}';
 
@@ -30,7 +30,7 @@ export abstract class ${service.name}
 
     static returnSchema = ${JSON.stringify(service.returnSchema)}
 
-    public abstract invoke(${renderFuncArgs(service.args)}):${renderReturnType(service.return)};
+    public abstract invoke(${[renderFuncArgs(service.args), 'context:T']}):${renderReturnType(service.return)};
 }
         `;
     }).join('');

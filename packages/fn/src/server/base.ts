@@ -5,7 +5,7 @@ import {JSONSchema6} from 'json-schema';
 import { ISrvRequestParam, IResponseResult } from '../common/interfaces';
 
 
-export class FnServer
+export class FnServer<T>
 {
     services:{[key:string]: any} = {};
 
@@ -22,11 +22,11 @@ export class FnServer
         this.services[serviceType.serviceName] = serviceType;
         return this;
     }
-    callServices(args:ISrvRequestParam[]):Promise<IResponseResult[]>
+    callServices(args:ISrvRequestParam[], context:T):Promise<IResponseResult[]>
     {
         let promises = args.map((arg)=>
         {
-            return this.callService(arg).catch((err) =>
+            return this.callService(arg, context).catch((err) =>
             {
                 let formatted = this.formatter.format(err);
                 return { error: formatted };
@@ -34,7 +34,7 @@ export class FnServer
         });
         return Promise.all(promises);
     }
-    async callService(arg:ISrvRequestParam):Promise<IResponseResult>
+    async callService(arg:ISrvRequestParam, context:T):Promise<IResponseResult>
     {
         if (arg.service == null) throw new MissingRequestParamException('service');
         if (arg.params == null) throw new MissingRequestParamException('params');
@@ -45,6 +45,7 @@ export class FnServer
         {
             return arg.params[name];
         })
+        args.push(context);
         let service = new Service();
         let result = await service.invoke.apply(service, args);
         this.validateReturn(Service, result);
