@@ -19,7 +19,7 @@ export interface Contact
 value:string[]
 }
 
-export abstract class GetPosts
+export abstract class GetPosts<T>
 {
     static serviceName = 'GetPosts';
 
@@ -29,10 +29,10 @@ export abstract class GetPosts
 
     static returnSchema = {"type":"object","properties":{"return":{"type":"array","items":{"$ref":"#/definitions/Post"}}},"required":["return"]}
 
-    public abstract invoke():Promise<Post[]>;
+    public abstract invoke(context:T):Promise<Post[]>;
 }
         
-export abstract class GetUsers
+export abstract class GetUsers<T>
 {
     static serviceName = 'GetUsers';
 
@@ -42,10 +42,10 @@ export abstract class GetUsers
 
     static returnSchema = {"type":"object","properties":{"return":{"type":"array","items":{"$ref":"#/definitions/User"}}},"required":["return"]}
 
-    public abstract invoke():Promise<User[]>;
+    public abstract invoke(context:T):Promise<User[]>;
 }
         
-export abstract class GetUser
+export abstract class GetUser<T>
 {
     static serviceName = 'GetUser';
 
@@ -55,6 +55,6 @@ export abstract class GetUser
 
     static returnSchema = {"type":"object","properties":{"return":{"$ref":"#/definitions/User"}},"required":["return"]}
 
-    public abstract invoke(id :string):Promise<User>;
+    public abstract invoke(id :string,context:T):Promise<User>;
 }
         

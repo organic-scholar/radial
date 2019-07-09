@@ -30,7 +30,7 @@ export abstract class ${service.name}<T>
 
     static returnSchema = ${JSON.stringify(service.returnSchema)}
 
-    public abstract invoke(${[renderFuncArgs(service.args), 'context:T']}):${renderReturnType(service.return)};
+    public abstract invoke(${[renderFuncArgs(service.args), 'context:T'].filter(Boolean).join(',')}):${renderReturnType(service.return)};
 }
         `;
     }).join('');

@@ -4,6 +4,19 @@ import { MissingRequestParamException, ServiceNotFoundException, InvalidParamete
 import {JSONSchema6} from 'json-schema';
 import { ISrvRequestParam, IResponseResult } from '../common/interfaces';
 
+export abstract class Service
+{
+    static serviceName: string;
+
+    static args:string[];
+
+    static argsSchema:JSONSchema6;
+
+    static returnSchema:JSONSchema6;
+
+    public abstract invoke(...args):Promise<any>
+}
+
 
 export class FnServer<T>
 {
@@ -17,9 +30,9 @@ export class FnServer<T>
     {
 
     }
-    add(serviceType:any)
+    add(service:Service)
     {
-        this.services[serviceType.serviceName] = serviceType;
+        this.services[service.constructor['serviceName']] = service;
         return this;
     }
     callServices(args:ISrvRequestParam[], context:T):Promise<IResponseResult[]>
@@ -38,17 +51,16 @@ export class FnServer<T>
     {
         if (arg.service == null) throw new MissingRequestParamException('service');
         if (arg.params == null) throw new MissingRequestParamException('params');
-        let Service = this.services[arg.service] || null;
-        if (Service == null) throw new ServiceNotFoundException(arg.service);
-        this.validateParams(Service, arg.params);
-        let args = Service.args.map((name:string)=>
+        let service = this.services[arg.service] || null;
+        if (service == null) throw new ServiceNotFoundException(arg.service);
+        this.validateParams(service.constructor, arg.params);
+        let args = service.constructor.args.map((name:string)=>
         {
             return arg.params[name];
         })
         args.push(context);
-        let service = new Service();
         let result = await service.invoke.apply(service, args);
-        this.validateReturn(Service, result);
+        this.validateReturn(service.constructor, result);
         return result;
     }
     validateParams(Service:any, params:any)
