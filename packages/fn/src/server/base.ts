@@ -4,17 +4,17 @@ import { MissingRequestParamException, ServiceNotFoundException, InvalidParamete
 import {JSONSchema6} from 'json-schema';
 import { ISrvRequestParam, IResponseResult } from '../common/interfaces';
 
-export abstract class Service
+export abstract class Service<T>
 {
     static serviceName: string;
 
     static args:string[];
 
-    static argsSchema:JSONSchema6;
+    static paramSchema:JSONSchema6;
 
     static returnSchema:JSONSchema6;
 
-    public abstract invoke(...args):Promise<any>
+    public abstract invoke(arg:object, context:T):Promise<any>
 }
 
 
@@ -30,7 +30,7 @@ export class FnServer<T>
     {
 
     }
-    add(service:Service)
+    add(service:Service<T>)
     {
         this.services[service.constructor['serviceName']] = service;
         return this;
@@ -53,7 +53,7 @@ export class FnServer<T>
         let service = this.services[arg.service] || null;
         if (service == null) throw new ServiceNotFoundException(arg.service);
         this.validateParams(service.constructor, {arg: arg.param});
-        let result = await service.invoke.apply(service, [arg, context]);
+        let result = await service.invoke.apply(service, [arg.param, context]);
         this.validateReturn(service.constructor, result);
         return result;
     }
@@ -64,7 +64,7 @@ export class FnServer<T>
         if(validate.errors == null) return;
         let message = validate.errors.map((error)=>
         {
-            return this.getErrorMessage(error, 'params');
+            return this.getErrorMessage(error, '');
         }).join(', ');
         throw new InvalidParametersException(message)
     }

@@ -1,4 +1,4 @@
-export let metadata = {"Types":{"Post":{"Title":"string","Body":"string"},"User":{"username":"string","password":"integer","contact":"Contact"},"Contact":{"method":"string","value":"string[]"}},"Services":{"GetPosts":{"return":"Post[]"},"GetUsers":{"return":"User[]"},"GetUser":{"arg":"string","return":"User"}}};
+export let metadata = {"Types":{"Post":{"Title":"string","Body":"string"},"User":{"username":"string","password":"integer","contact":"Contact"},"Contact":{"method":"string","value":"string[]"}},"Services":{"GetPosts":{"return":"Post[]"},"GetUsers":{"return":"User[]"},"GetUser":{"param":"string","return":"User"}}};
 export let schema = {"definitions":{"Post":{"type":"object","properties":{"Title":{"type":"string"},"Body":{"type":"string"}},"required":["Title","Body"]},"User":{"type":"object","properties":{"username":{"type":"string"},"password":{"type":"integer"},"contact":{"$ref":"#/definitions/Contact"}},"required":["username","password","contact"]},"Contact":{"type":"object","properties":{"method":{"type":"string"},"value":{"type":"array","items":{"type":"string"}}},"required":["method","value"]}}};
 export interface Post
 {
@@ -23,32 +23,32 @@ export abstract class GetPosts<T>
 {
     static serviceName = 'GetPosts';
 
-    static argSchema = {"type":"object","properties":{"arg":{"type":"null"}},"required":["arg"]};
+    static paramSchema = {"type":"object","properties":{"param":{"type":"null"}},"required":["param"]};
 
     static returnSchema = {"type":"object","properties":{"return":{"type":"array","items":{"$ref":"#/definitions/Post"}}},"required":["return"]}
 
-    public abstract invoke(arg:null, context:T):Promise<Post[]>;
+    public abstract invoke(param:null, context:T):Promise<Post[]>;
 }
         
 export abstract class GetUsers<T>
 {
     static serviceName = 'GetUsers';
 
-    static argSchema = {"type":"object","properties":{"arg":{"type":"null"}},"required":["arg"]};
+    static paramSchema = {"type":"object","properties":{"param":{"type":"null"}},"required":["param"]};
 
     static returnSchema = {"type":"object","properties":{"return":{"type":"array","items":{"$ref":"#/definitions/User"}}},"required":["return"]}
 
-    public abstract invoke(arg:null, context:T):Promise<User[]>;
+    public abstract invoke(param:null, context:T):Promise<User[]>;
 }
         
 export abstract class GetUser<T>
 {
     static serviceName = 'GetUser';
 
-    static argSchema = {"type":"object","properties":{"arg":{"type":"string"}},"required":["arg"]};
+    static paramSchema = {"type":"object","properties":{"param":{"type":"string"}},"required":["param"]};
 
     static returnSchema = {"type":"object","properties":{"return":{"$ref":"#/definitions/User"}},"required":["return"]}
 
-    public abstract invoke(arg:string, context:T):Promise<User>;
+    public abstract invoke(param:string, context:T):Promise<User>;
 }
         

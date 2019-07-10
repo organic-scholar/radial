@@ -47,8 +47,8 @@ export interface ITypeDef {
 export interface IServiceDef
 {
     name: string,
-    arg:IPropDef
-    argSchema: JSONSchema6;
+    param:IPropDef
+    paramSchema: JSONSchema6;
     return: IPropDef,
     returnSchema: JSONSchema6;
 }

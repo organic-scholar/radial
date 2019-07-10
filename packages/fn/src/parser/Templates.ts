@@ -24,11 +24,11 @@ export abstract class ${service.name}<T>
 {
     static serviceName = '${service.name}';
 
-    static argSchema = ${JSON.stringify(service.argSchema)};
+    static paramSchema = ${JSON.stringify(service.paramSchema)};
 
     static returnSchema = ${JSON.stringify(service.returnSchema)}
 
-    public abstract invoke(${[renderProp(service.arg), 'context:T'].join(', ')}):${renderReturnType(service.return)};
+    public abstract invoke(${[renderProp(service.param), 'context:T'].join(', ')}):${renderReturnType(service.return)};
 }
         `;
     }).join('');
@@ -44,9 +44,9 @@ export class ${service.name}
     {
 
     }
-    public invoke(${renderProp(service.arg)}):${renderReturnType(service.return)}
+    public invoke(${renderProp(service.param)}):${renderReturnType(service.return)}
     {
-        return callService(this, arg);
+        return callService(this, param);
     }
 }
 `;

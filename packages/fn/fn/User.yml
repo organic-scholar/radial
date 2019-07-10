@@ -11,5 +11,5 @@ Services:
   GetUsers:
     return: User[]
   GetUser: 
-    arg: string
+    param: string
     return: User

@@ -54,15 +54,15 @@ export class DefParser
             let returnName = srvOpts['return'] ? 'return' : 'return?'
             let returnTypeDef = returnType = this.parseProp(returnType, returnName, types);
 
-            let argType = srvOpts['arg'] ||  'null';
-            let argTypeDef = this.parseProp(argType, 'arg', types);
+            let paramType = srvOpts['param'] ||  'null';
+            let paramTypeDef = this.parseProp(paramType, 'param', types);
 
             let srvDef:IServiceDef = {
                 name: srvName,
-                arg: argTypeDef,
-                argSchema: this.generateSchema([argTypeDef]),
+                param: paramTypeDef,
+                paramSchema: this.generateSchema([paramTypeDef]),
                 return: returnTypeDef,
-                returnSchema: this.generateSchema([returnType])
+                returnSchema: this.generateSchema([returnTypeDef])
             };
             return srvDef;
         })
