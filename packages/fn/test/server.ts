@@ -11,22 +11,22 @@ let app = express();
 app.use(morgan('test'));
 app.use(bodyParser());
 
-class GetUserImpl extends GetUser
-{
-	public invoke(id: string): Promise<User>
-	{
-		let user:User = {
-			username: 'nauman',
-			contact: {
-				method: '1'
-			}
-		}
-		return Promise.resolve(user);
-	}
-}
+// class GetUserImpl extends GetUser
+// {
+// 	public invoke(id: string): Promise<User>
+// 	{
+// 		let user:User = {
+// 			username: 'nauman',
+// 			contact: {
+// 				method: '1'
+// 			}
+// 		}
+// 		return Promise.resolve(user);
+// 	}
+// }
 
 let fn = new FnServer(schema as JSONSchema6);
-fn.add(GetUserImpl);
+// fn.add(GetUsrImpl);
 
 // app.use('/api', fn.handle)
 
