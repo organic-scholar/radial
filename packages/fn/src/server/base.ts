@@ -52,7 +52,7 @@ export class FnServer<T>
         if (arg.service == null) throw new MissingRequestParamException('service');
         let service = this.services[arg.service] || null;
         if (service == null) throw new ServiceNotFoundException(arg.service);
-        this.validateParams(service.constructor, {arg: arg.param || null});
+        this.validateParams(service.constructor, {param: arg.param || null});
         let result = await service.invoke.apply(service, [arg.param, context]);
         this.validateReturn(service.constructor, result);
         return result;
