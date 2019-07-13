@@ -52,14 +52,14 @@ export class FnServer<T>
         if (arg.service == null) throw new MissingRequestParamException('service');
         let service = this.services[arg.service] || null;
         if (service == null) throw new ServiceNotFoundException(arg.service);
-        this.validateParams(service.constructor, {arg: arg.param});
+        this.validateParams(service.constructor, {arg: arg.param || null});
         let result = await service.invoke.apply(service, [arg.param, context]);
         this.validateReturn(service.constructor, result);
         return result;
     }
     validateParams(Service:any, params:any)
     {
-        let validate = this.ajv.compile(Object.assign({}, this.schema, Service.argSchema));
+        let validate = this.ajv.compile(Object.assign({}, this.schema, Service.paramSchema));
         validate(params);
         if(validate.errors == null) return;
         let message = validate.errors.map((error)=>
