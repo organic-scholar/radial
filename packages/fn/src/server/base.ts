@@ -14,7 +14,7 @@ export abstract class Service<T>
 
     static returnSchema:JSONSchema6;
 
-    public abstract invoke(arg:object, context:T):Promise<any>
+    public abstract invoke(arg:any, context:T):Promise<any>
 }
 
 
