@@ -17,7 +17,7 @@ abstract class Service
 }
 
 
-export function callService<T>(instance:Service, param:object)
+export function callService<T>(instance:Service, param:any)
 {
     let params: any = {};
     let service = instance.constructor['serviceName'];
