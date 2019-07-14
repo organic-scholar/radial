@@ -22,8 +22,8 @@ export interface IRequestConfig extends RequestInit
 {
     url:string;
     interceptors?: {
-        request?: (config:IRequestConfig)=> IRequestConfig | Promise<IRequestConfig>[]
-        response?: (result:Response)=> Response | Promise<Response>[]
+        request?: ((config:IRequestConfig)=> IRequestConfig | Promise<IRequestConfig>)[]
+        response?: ((result:Response)=> Response | Promise<Response>)[]
     }
 }
 
@@ -33,25 +33,39 @@ export class ServiceRequest
 
     invoke<T>(param:ISrvRequestParam, config:IRequestConfig):Promise<T>
     {
-        let {url, interceptors, ...rest} = config
-        rest  = {...rest, body: JSON.stringify({fn: param}), method: 'POST'}
-        return fetch(url, rest).then((res)=>
+        let promise:Promise<IRequestConfig> = Promise.resolve(config);
+        if(config.interceptors)
         {
-            return res.json() as IResponseResult<T>;
-        })
-        .then((result)=>
-        {
-            if(result.data) return result.data;
-            if(result.error) throw Object.assign(new Error(), result.error);
-            throw new InvalidResponseException(result);
-        }).catch((err)=>
-        {
-            if(err.name === 'TypeError' && err.message === 'Failed to fetch')
+            let interceptors = config.interceptors.request!;
+            promise = interceptors.reduce((prev, next)=>
             {
-                return Promise.reject(new NetworkError());
-            }
-            return Promise.reject(err);
+                return prev.then((config)=>
+                {
+                    return next(config)
+                });
+            }, promise);
+        }
+        return promise.then((config)=>
+        {
+            let { url, interceptors, ...rest } = config
+            rest = { ...rest, body: JSON.stringify({ fn: param }), method: 'POST' }
+            return fetch(url, rest).then((res) =>
+            {
+                return res.json() as IResponseResult<T>;
+            })
+            .then((result) =>
+            {
+                if (result.data) return result.data;
+                if (result.error) throw Object.assign(new Error(), result.error);
+                throw new InvalidResponseException(result);
+            }).catch((err) => {
+                if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+                    return Promise.reject(new NetworkError());
+                }
+                return Promise.reject(err);
+            });
         });
+
     }
 }
 
