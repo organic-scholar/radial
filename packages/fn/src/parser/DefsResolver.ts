@@ -29,11 +29,19 @@ export class DefsResolver
     }
     readFile(filePath:string):any
     {
-        if (filePath.startsWith('http')) {
-            return fetch(filePath).then((res) =>
+        if (filePath.startsWith('http'))
+        {
+            let body = JSON.stringify({
+                fn: {
+                    service: 'GetMetadata',
+                    param: null
+                }
+
+            });
+            return fetch(filePath, {method: 'POST', body: body}).then((res) =>
             {
                 return res.json()
-            });
+            }).then((json)=> json.data);
         }
         return new Promise((resolve, reject) =>
         {

@@ -1,5 +1,21 @@
 import { JSONSchema6 } from 'json-schema';
 
+export interface IMetadata
+{
+    Types: {
+        [key: string]: {
+            [key: string]: string
+        }
+    }
+    Services: {
+        [key: string]: {
+            return: string
+            param?: string
+        }
+    }
+
+}
+
 export interface ISrvRequestParam
 {
     service:string;

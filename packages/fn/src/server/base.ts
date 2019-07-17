@@ -2,7 +2,8 @@ import * as Ajv from 'ajv';
 import { ExceptionFormatter } from './ExceptionFormatter';
 import { MissingRequestParamException, ServiceNotFoundException, InvalidParametersException, InvalidReturnTypeException } from './Exceptions';
 import {JSONSchema6} from 'json-schema';
-import { ISrvRequestParam, IResponseResult } from '../common/interfaces';
+import { ISrvRequestParam, IResponseResult, IMetadata } from '../common/interfaces';
+
 
 export abstract class Service<T>
 {
@@ -18,6 +19,25 @@ export abstract class Service<T>
 }
 
 
+export class GetMetadata<T> extends Service<T>
+{
+    static serviceName = 'GetMetadata';
+
+    static paramSchema:JSONSchema6 = {"type":"object","properties":{"param":{"type":"null"}},"required":["param"]};
+
+    static returnSchema:JSONSchema6 = {"type":"object", "properties":{}, additionalProperties: true ,"required": ["return"]}
+
+    constructor(protected metadata:IMetadata)
+    {
+        super();
+    }
+    public async invoke(arg: null, context: T): Promise<object>
+    {
+        return this.metadata;
+    }
+}
+
+
 export class FnServer<T>
 {
     services:{[key:string]: any} = {};
@@ -26,9 +46,9 @@ export class FnServer<T>
 
     ajv = new Ajv();
 
-    constructor(protected schema:JSONSchema6)
+    constructor(protected schema:JSONSchema6, protected metadata:IMetadata)
     {
-
+        this.add(new GetMetadata<T>(metadata));
     }
     add(service:Service<T>)
     {

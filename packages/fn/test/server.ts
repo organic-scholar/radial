@@ -3,8 +3,9 @@ import * as http from 'http';
 import * as  morgan from 'morgan';
 import * as bodyParser from 'body-parser';
 import {FnServer} from '../src/server/base'
-import {schema, GetUser, User} from './fn.server';
+import {schema, GetUser, User, metadata} from './fn.server';
 import { JSONSchema6 } from 'json-schema';
+import { IMetadata } from '../src/common/interfaces';
 
 let app = express();
 
@@ -25,7 +26,7 @@ app.use(bodyParser());
 // 	}
 // }
 
-let fn = new FnServer(schema as JSONSchema6);
+let fn = new FnServer(schema as JSONSchema6, metadata as IMetadata);
 // fn.add(GetUsrImpl);
 
 // app.use('/api', fn.handle)
