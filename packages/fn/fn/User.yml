@@ -1,6 +1,7 @@
 Types:
   User:
     username: string
+    keys: string[]
     password: integer
     contact: Contact
   Contact:

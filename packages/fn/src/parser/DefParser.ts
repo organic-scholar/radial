@@ -116,10 +116,11 @@ export class DefParser
                 let t = schemaTypeAlias[type.name] || type.name;
                 let isSchemaType = jsonSchemaTypes.indexOf(t) == -1;
                 let schema = isSchemaType ? { $ref: `#/definitions/${t}` } : {type: t}
-                if(t.array) return {type: 'array', items: schema};
+                if(type.array) return {type: 'array', items: schema};
                 return schema;
 
             });
+            if(prop.name == 'keys') console.log(def);
             if(def.length == 1) schema.properties[prop.name] = def[0];
             else schema.properties[prop.name] = {oneOf: def};
             if(prop.optional == false) schema.required.push(prop.name);
