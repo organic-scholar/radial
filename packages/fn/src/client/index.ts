@@ -13,7 +13,7 @@ abstract class Service
     {
 
     }
-    public abstract invoke(...args):Promise<object>
+    public abstract invoke(...args:any[]):Promise<any>
 }
 
 
