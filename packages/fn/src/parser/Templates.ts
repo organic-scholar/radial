@@ -57,30 +57,30 @@ export class ${service.name}
     return [t0, t, t1, type === 'server' ? t2 : t3].join('');
 }
 
+function renderType(type:{name:string, array:boolean}[])
+{
+    return type.map((t)=>
+    {
+        return `${t.name}${t.array ? '[]':''}`
+    }).join(' | ');
+}
+
 function renderProp(def:IPropDef)
 {
-    return `${def.name}${def.optional ? '?' : ''}:${def.type}${def.array ? '[]' : ''}`
+    return `${def.name}${def.optional ? '?' : ''}:${renderType(def.types)}`
 }
 
 function renderProps(defs:IPropDef[])
 {
     return defs.map((def)=>
     {
-        return `${def.name}${def.optional ? '?' : ''}:${def.type}${def.array ? '[]' : ''}`
+        return renderProp(def);
     }).join('\n');
-}
-
-function renderFuncArgs(defs:IPropDef[]):string
-{
-    return defs.map((def)=>
-    {
-        return `${def.name} ${def.optional ? '?' : ''}:${def.type}${def.array ? '[]' : ''}`
-    }).join(', ')
 }
 
 function renderReturnType(def:IPropDef):string
 {
-    return `Promise<${def.type}${def.array ? '[]': ''}${def.optional ? '| undefined' : ''}>`
+    return `Promise<${renderType(def.types)}${def.optional ? ' | void' : ''}>`
 }
 
 

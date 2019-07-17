@@ -70,19 +70,18 @@ export class DefParser
     }
     parseProp(propType:string, name:string, types:string[]):IPropDef
     {
-        let array = false;
-        if (propType.endsWith('[]'))
+        let def = propType.split('|').map((t)=>
         {
-            propType = propType.replace('[]', '');
-            array = true;
-        }
-        this.typeExists(propType, types);
-        propType = tsTypesAlias[propType] || propType;
+            let array = t.endsWith('[]') ? true : false;
+            t = t.replace('[]', '').trim();
+            this.typeExists(t, types)
+            t = tsTypesAlias[t] || t;
+            return {name: t, array: array};
+        });
         return {
             name: name.endsWith('?') ? name.slice(0,-1) :  name,
             optional: name.endsWith('?'),
-            type: propType,
-            array: array
+            types: def
         };
     }
     typeExists(typeName:string, types:string[])
@@ -112,17 +111,17 @@ export class DefParser
         };
         props.forEach((prop)=>
         {
-            let type = schemaTypeAlias[prop.type] || prop.type;
-            let isSchemaType = jsonSchemaTypes.indexOf(type) == -1;
-            let def =   isSchemaType ? {$ref: `#/definitions/${type}`} : {type: type}
-            if(prop.array)
+            let def = prop.types.map((type)=>
             {
-                schema.properties[prop.name] = {type: 'array', items: def};
-            }
-            else
-            {
-                schema.properties[prop.name] = def;
-            }
+                let t = schemaTypeAlias[type.name] || type.name;
+                let isSchemaType = jsonSchemaTypes.indexOf(t) == -1;
+                let schema = isSchemaType ? { $ref: `#/definitions/${t}` } : {type: t}
+                if(t.array) return {type: 'array', items: schema};
+                return schema;
+
+            });
+            if(def.length == 1) schema.properties[prop.name] = def[0];
+            else schema.properties[prop.name] = {oneOf: def};
             if(prop.optional == false) schema.required.push(prop.name);
         });
         return schema;

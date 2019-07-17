@@ -35,8 +35,7 @@ export interface ISrvDescriptor
 export interface IPropDef
 {
     name:string;
-    type:string;
-    array:boolean;
+    types:{name:string, array:boolean}[];
     optional: boolean;
 }
 export interface ITypeDef {

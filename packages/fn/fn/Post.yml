@@ -1,6 +1,6 @@
 Types:
   Post:
-    Title: string
+    Title?: string | null
     Body: string
 
 Services:
