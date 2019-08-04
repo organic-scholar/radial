@@ -84,7 +84,7 @@ export class BatchServiceRequest
         })
         .catch((err)=>
         {
-            if(err.name === 'TypeError' && err.message === 'Failed to fetch')
+            if(err.name === 'TypeError')
             {
                 return Promise.reject(new NetworkError());
             }
