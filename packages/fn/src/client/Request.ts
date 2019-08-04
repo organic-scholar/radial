@@ -59,7 +59,8 @@ export class ServiceRequest
                 if (result.error) throw Object.assign(new Error(), result.error);
                 throw new InvalidResponseException(result);
             }).catch((err) => {
-                if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+                if (err.name === 'TypeError')
+                {
                     return Promise.reject(new NetworkError());
                 }
                 return Promise.reject(err);
