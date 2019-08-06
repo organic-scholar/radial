@@ -1,58 +1,52 @@
-import {isBlank, interpolate} from '@radial/helpers';
-
-export function length(min:number, max:number){
-    return function(val, key){
-        if(isBlank(val)) return;
+export function length(min:number, max:number)
+{
+    return function(val, key)
+    {
         if(val.length < min){
-            return 'too short use at least '+min+' characters.';
+            return 'length';
         }
         if(val.length > max ){
-            return 'too long '+max+' characters allowed';
+            return 'length';
         }
     }
 }
 
 export function email(){
-    return function(val, key){
-        if(isBlank(val)) return;
+    return function(val, key)
+    {
         let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(false === re.test(val)){
-            return interpolate(email['message'], {key: key});
+        if(false === re.test(val))
+        {
+            return 'email';
         }
     }
 }
-email['message'] = 'This is not valid email address';
 
 export function containsIn(values:Array<any>)
 {
     return function (val, key){
-        if(values.indexOf(val) === -1){
-            return interpolate(containsIn['message'], {key: key});
+        if(values.indexOf(val) === -1)
+        {
+            return 'contains';
         }
     }
 }
-containsIn['message'] = 'This is not a valid value';
 
-export function alpha(numeric=false){
-    return function(val, key){
-        let regexp = numeric ? /^[0-9a-zA-Z]+$/ : /^[a-zA-Z]+$/;
-        if(val.match(regexp)) return;
-        return interpolate(alpha['message'], {key: key});
-    };
-}
-alpha['message'] = 'contains invalid characters';
-
-export function alphaSpace(numeric=false)
+export function alpha(spaces:boolean = false)
 {
+    let regexp = spaces === false ? /^[a-z]+$/i : /^[a-z\s]+$/i;
     return function(val, key)
     {
-        let regexp =  numeric ? /^[0-9a-z\s]+$/i : /^[a-z\s]+$/i
         if(val.match(regexp)) return;
-        return interpolate(alphaSpace['message'], {key: key});
+        return 'alpha';
     };
-
 }
-
-alphaSpace['message'] = 'contains invalid characters';
-
-
+export function alphaNumeric(spaces:boolean = false)
+{
+    let regexp =  spaces === false ? /^[0-9a-z]+$/i : /^[0-9a-z\s]+$/i;
+    return function(val, key)
+    {
+        if(val.match(regexp)) return;
+        return 'alphaNumeric';
+    };
+}

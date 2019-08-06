@@ -1,6 +1,7 @@
 export function callback(cb:Function)
 {
-    return function(val, key:string){
+    return function(val, key:string)
+    {
         return cb(val, cb);
     }
 }
@@ -9,7 +10,7 @@ export function typeOf(string)
     return function(val, key)
     {
         if(typeof val === string) return null;
-        return 'invalid type';
+        return 'typeOf';
     }
 }
 export function instanceOf(Type)
@@ -17,7 +18,7 @@ export function instanceOf(Type)
     return function(val, key)
     {
         if(val instanceof Type) return null;
-        return 'invalid type';
+        return 'instanceOf';
     }
 
 }

@@ -1,6 +1,4 @@
-import {getIn, setInMutable} from "@radial/helpers";
-
-let setIn = setInMutable;
+import { getIn, setIn } from "./common";
 
 export class ValidationException extends Error
 {
@@ -11,7 +9,8 @@ export class ValidationException extends Error
 
     type = 'Validation';
 
-    constructor(errors){
+    constructor(errors:ValidationError|string[])
+    {
         super('validation errors');
         this.data = errors;
     }

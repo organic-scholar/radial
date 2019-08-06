@@ -1,5 +1,5 @@
-import { validate } from "../validator";
-import { setInMutable } from "@radial/helpers";
+import { validate } from "../main";
+import { setIn } from "../common";
 
 export function forEach(rules)
 {
@@ -15,7 +15,7 @@ export function forEach(rules)
 
             return promise.catch((err)=>
             {
-                setInMutable(errors, path, err.errors || err);
+                setIn(errors, path, err.errors || err);
             });
         });
         return Promise.all(promises).then(()=>
