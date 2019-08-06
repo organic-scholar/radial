@@ -5,7 +5,7 @@ let setIn = setInMutable;
 export class ValidationException extends Error
 {
 
-    errors:ValidationError | string[];
+    data:ValidationError | string[];
 
     statusCode = 422;
 
@@ -13,7 +13,7 @@ export class ValidationException extends Error
 
     constructor(errors){
         super('validation errors');
-        this.errors = errors;
+        this.data = errors;
     }
 }
 
