@@ -1,6 +1,6 @@
 {
   "name": "@radial/serializer",
-  "version": "0.2.0",
+  "version": "0.2.29",
   "description": "",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
