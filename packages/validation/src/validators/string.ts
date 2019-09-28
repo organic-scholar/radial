@@ -1,24 +1,19 @@
 export function length(min:number, max:number)
 {
-    return function(val, key)
+    return function(val:string, key:string)
     {
-        if(val.length < min){
-            return 'length';
-        }
-        if(val.length > max ){
-            return 'length';
-        }
+        if(val.length < min) return 'minLength';
+        if(val.length > max ) return 'maxLength';
     }
 }
 
-export function email(){
-    return function(val, key)
+let regexp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+export function email()
+{
+    return function(val:string, key:string)
     {
-        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(false === re.test(val))
-        {
-            return 'email';
-        }
+        if(false === regexp.test(val)) return 'email';
     }
 }
 

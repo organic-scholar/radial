@@ -39,7 +39,7 @@ describe('validate simple objects', ()=>
         {
             let errors = err.data;
             expect(errors.id).toContain('notNull');
-            expect(errors.name).toContain('length');
+            expect(errors.name).toContain('maxLength');
             expect(errors.age).toContain('equalTo');
             expect(errors.password).toContain('notBlank');
         });

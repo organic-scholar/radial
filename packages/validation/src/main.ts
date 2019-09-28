@@ -54,29 +54,25 @@ export function validate(data:any={}, rules:any={})
 
     let errors = {};
 
-    let results = Object.keys(rules).map(function (key)
+    let promises = Object.keys(rules).map(function (key)
     {
         let val = getIn(data, key);
 
         return validateValue(val, key, rules[key], data).catch((err)=>
         {
             setIn(errors, key, err);
-
         });
     });
 
-    return new Promise(function (resolve, reject)
+    return Promise.all(promises).then(function ()
     {
-        Promise.all(results).then(function () {
-            if (Object.keys(errors).length == 0) {
-                return resolve();
-            }
-            reject(new ValidationException(errors));
-        });
+        if (Object.keys(errors).length == 0) return;
+        return Promise.reject(new ValidationException(errors));
     });
 }
 
-export interface ValidationError {
+export interface ValidationError
+{
     [key: string]: Array<string>
 }
 
