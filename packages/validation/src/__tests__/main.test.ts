@@ -1,5 +1,5 @@
-import {validate} from '../src/main';
-import {length, notBlank, email, notNull, equalTo, alpha} from '../src/validators';
+import {validate} from '../main';
+import {length, notBlank, email, notNull, equalTo, alpha} from '../validators';
 
 describe('validate simple objects', ()=>
 {

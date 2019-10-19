@@ -15,7 +15,7 @@ export function notBlank()
             return 'notBlank'
         }
     }
-    func['allowNil'] = true;
+    func['nullable'] = true;
     return func;
 }
 
@@ -28,7 +28,7 @@ export function notNull()
             return 'notNull';
         }
     }
-    func['allowNil'] = true;
+    func['nullable'] = true;
     return func;
 }
 

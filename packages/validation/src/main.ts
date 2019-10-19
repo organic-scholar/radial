@@ -20,9 +20,9 @@ function validateValue(value:any, path:string, validators:Array<Function>, data:
 {
     let result = validators.map((validator)=>
     {
-        let isNil = value === undefined || value === null || value === NaN;
-        if(isNil && validator['allowNil'] !== true) return Promise.resolve();
-        return Promise.resolve(validator(value, path, data, {}));
+        let blank = value === undefined || value === null || value === NaN || value === '';
+        if(!blank || validator['nullable']) return validator(value, path, data, {})
+        return Promise.resolve();
     });
     return Promise.all(result).then(function (errors)
     {

@@ -4,7 +4,7 @@
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "scripts": {
-    "test": "jest test",
+    "test": "jest",
     "prepublish": "rm -rf lib && tsc"
   },
   "author": "",
