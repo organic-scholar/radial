@@ -43,9 +43,22 @@ describe('validate simple objects', ()=>
             expect(errors.age).toContain('equalTo');
             expect(errors.password).toContain('notBlank');
         });
+    });
+
+    it.only('should not run validator if value is empty', ()=>
+    {
+        let object = { name: ''};
+        return validate(object, {
+            name: [notBlank(), length(1, 3)],
+        }).catch((err)=>
+        {
+            let errors = err.data;
+            expect(errors.name).toHaveLength(1);
+        });
 
     });
 });
+
 
 
 describe('validate complex objects', ()=>

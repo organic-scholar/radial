@@ -22,3 +22,9 @@ export function getIn(obj:object, path:string)
     }
     return obj;
 }
+
+export function isBlank(value:any)
+{
+    if(value) return true;
+    return false;
+}
