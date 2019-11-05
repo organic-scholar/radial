@@ -1,6 +1,6 @@
 {
   "name": "@radial/validation",
-  "version": "0.2.33",
+  "version": "0.2.34",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "scripts": {
