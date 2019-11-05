@@ -1,19 +1,16 @@
-export * from './parse';
-export {setIn} from './setIn';
-
-
-export function isBlank(val)
+export function isBlank(val:any)
 {
-    if(val === null || val === undefined) return true;
+    if(val === null || val === undefined || val === NaN) return true;
     if(typeof val === 'string' && val.length === 0) return true;
     if(Array.isArray(val) && val.length === 0) return true;
     return false;
 }
-export function isNil(val)
+export function isNil(val:any)
 {
     return val === null || val === undefined || val === NaN;
 }
-export function getIn(obj, path){
+export function getIn(obj:object, path:string)
+{
     let p = path.split('.');
     for (let i=0; i < p.length; i++){
         obj = obj[p[i]];
@@ -21,23 +18,23 @@ export function getIn(obj, path){
     return obj;
 }
 
-export function pick(keys, object){
+export function pick(keys:string[], object:object)
+{
     let o = {};
-    keys.forEach((key)=>{
+    keys.forEach((key)=>
+    {
         let value = getIn(object, key);
-        setInMutable(o, key, value);
+        o[key] = value;
     });
     return o;
 }
-export function clone(object){
-    if(Array.isArray(object)){
-        return object.slice();
-    }
-    let proto = Object.getPrototypeOf(object);
-    return Object.assign(Object.create(proto), object);
+export function clone(value:any)
+{
+    return JSON.parse(JSON.stringify(value));
 }
 
-export function setInMutable(obj, path, value) {
+export function setIn(obj:object, path:string, value:string)
+{
     let current = obj;
     let stack = path.split('.');
 
@@ -52,14 +49,13 @@ export function setInMutable(obj, path, value) {
     return obj;
 }
 
-export function interpolate(str, o) {
-    return str.replace(
-        /{([^{}]*)}/g,
-        function (a, b) {
-            let r = o[b];
-            return typeof r === 'string' || typeof r === 'number' ? r : a;
-        }
-    );
+export function interpolate(str:string, o:object)
+{
+    return str.replace( /{([^{}]*)}/g, function (a, b)
+    {
+        let r = o[b];
+        return (typeof r === 'string' || typeof r === 'number' ? r : a).toString();
+    });
 }
 
 

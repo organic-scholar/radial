@@ -7,17 +7,20 @@ export function parseJson<T>(json:string, def=null):T
         return def;
     }
 }
+
 export function parseBool(bool:string)
 {
     if(bool.toLowerCase() === 'true')  return true;
     return false;
 }
 
-export function jsonString(object):string
+export function jsonString(object:any):string
 {
     return JSON.stringify(object);
 }
-export function toFormData(obj, form = null, namespace = null): FormData {
+
+export function toFormData(obj, form = null, namespace = null): FormData
+{
     let fd = form || new FormData();
     let formKey;
     for (var property in obj) {

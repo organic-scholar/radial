@@ -1,23 +1,58 @@
-export function isAfter(date:Date, key)
+export function isAfter(date:Date)
 {
-    return function(val:Date, _)
+    return function(val:string|number, _)
     {
-        if(val instanceof Date && date instanceof Date)
+        let value = new Date(val);
+        if(value.getTime())
         {
-            if(val.getTime() > date.getTime()) return;
-            return _ + ' must be after ' + key;
+            if(value.getTime() > date.getTime()) return;
+            return 'isAfter'
         }
     }
 }
-export function isBefore(date:Date, key)
+
+export function isDate()
 {
-    return function(val:Date, _)
+    return function(value:string)
     {
-        if(val instanceof Date && date instanceof Date)
+        let date = new Date(value);
+        if(date.getTime()) return;
+        return 'isTimestamp';
+    }
+}
+
+export function isTimestamp()
+{
+    return function(unix:number)
+    {
+        let date = new Date(unix * 1000);
+        if(date.getTime()) return;
+        return 'isTimestamp';
+    }
+}
+
+export function isBefore(date:Date)
+{
+    return function(val:string, _)
+    {
+        let value = new Date(val);
+        if(value.getTime())
         {
-            if(val.getTime() < date.getTime()) return;
-            return _ + ' must be before ' + key;
+            if(value.getTime() < date.getTime()) return;
+            return 'isBefore';
         }
     }
+}
 
+export function isBetween(min:Date, max:Date)
+{
+    return function(val:string, _)
+    {
+        let value = new Date(val);
+        if(value.getTime())
+        {
+            if(min.getTime() < value.getTime() &&  value.getTime() < max.getTime()) return;
+            return 'isBetween';
+        }
+    }
 }

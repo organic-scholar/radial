@@ -1,6 +1,6 @@
-export function equalTo(opt)
+export function equalTo(opt:any)
 {
-    return function(val, key)
+    return function(val:any)
     {
         if(val != opt)
         {
@@ -8,9 +8,9 @@ export function equalTo(opt)
         }
     }
 }
-export function identicalTo(opt)
+export function identicalTo(opt:any)
 {
-    return function(val, key)
+    return function(val:any)
     {
         if(val !== opt)
         {

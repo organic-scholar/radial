@@ -1,6 +1,6 @@
-export function isBlank(val)
+export function isBlank(val:any)
 {
-    if(val === null || val === undefined) return true;
+    if(val === null || val === undefined || val === NaN) return true;
     if(typeof val === 'string' && val.length === 0) return true;
     if(Array.isArray(val) && val.length === 0) return true;
     return false;
@@ -8,7 +8,7 @@ export function isBlank(val)
 
 export function notBlank()
 {
-    let func = function(val, key:string)
+    let func = function(val:any)
     {
         if(isBlank(val))
         {
@@ -21,7 +21,7 @@ export function notBlank()
 
 export function notNull()
 {
-    let func = function(val, key:string)
+    let func = function(val:any)
     {
         if(val === null)
         {
