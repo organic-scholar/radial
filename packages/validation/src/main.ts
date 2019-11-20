@@ -38,16 +38,16 @@ export function validate(data:object, rules:IValidationRules={})
 
     return Promise.all(promises).then(()=>
     {
-        if (Object.keys(errors).length == 0) return;
+        if (Object.keys(errors).length === 0) return;
         return Promise.reject(new ValidationException(errors));
     });
 }
 
-interface IValidationRules {
+export interface IValidationRules {
     [key:string]: IValidationRule[]
 }
 
-type IValidationRule  = (value:any, key:string, data:any)=> (void|string)|Promise<string|void>
+export type IValidationRule = (value:any, key:string, data:any)=> (void|string|object)|Promise<string|void|object>
 
 export class ValidationException extends Error
 {

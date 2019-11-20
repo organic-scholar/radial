@@ -1,5 +1,5 @@
 import {validate} from '../main';
-import {length, notBlank, email, notNull, equalTo, alpha} from '../validators';
+import {length, notBlank, email, notNull, equalTo, alpha, forEach} from '../validators';
 
 describe('validate simple objects', ()=>
 {
@@ -60,7 +60,6 @@ describe('validate simple objects', ()=>
 });
 
 
-
 describe('validate complex objects', ()=>
 {
     it('should pass validation of complex object', ()=>
@@ -100,4 +99,23 @@ describe('validate complex objects', ()=>
     });
 
 
+});
+
+describe('it should validate collections', ()=>
+{
+
+    it('should validate list of items', async ()=>
+    {
+        let post = {
+            title: 'SomeTitle',
+            body: 'some text',
+            comments: [{body: 'this is a comment'}, {body: 'this is an another comment'}]
+        };
+        await validate(post, {
+            comments: [forEach({ body: [notBlank(), length(1, 5)] })]
+        }).catch((err)=>
+        {
+            console.log(JSON.stringify(err.data));
+        });
+    });
 });
