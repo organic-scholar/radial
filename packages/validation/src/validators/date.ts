@@ -17,7 +17,7 @@ export function isDate()
     {
         let date = new Date(value);
         if(date.getTime() !== NaN) return;
-        return 'isTimestamp';
+        return 'isDate';
     }
 }
 
