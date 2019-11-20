@@ -45,7 +45,7 @@ describe('validate simple objects', ()=>
         });
     });
 
-    it.only('should not run validator if value is empty', ()=>
+    it('should not run validator if value is empty', ()=>
     {
         let object = { name: ''};
         return validate(object, {
@@ -77,8 +77,27 @@ describe('validate complex objects', ()=>
              'post.body': [notBlank(), length(1, 10), alpha(true)]
          }).catch((err)=>
          {
-             fail('it should pass');
+            console.log(err.data);
+            fail('it should pass');
+         });
+    });
+    it('should fail validation of complex object', ()=>
+    {
+        let object = {
+            name: 'john',
+            post: {
+                title: 'SomeTitle',
+                body: 'some text'
+            }
+         };
+         return validate(object, {
+            'post.title': [length(10, 100)]
+            
+         }).catch((err)=>
+         {
             console.log(err.data);
          });
     });
+
+
 });

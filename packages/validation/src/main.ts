@@ -1,20 +1,5 @@
 import { getIn, setIn } from "./common";
 
-export class ValidationException extends Error
-{
-
-    data:ValidationError | string[];
-
-    statusCode = 422;
-
-    type = 'Validation';
-
-    constructor(errors:ValidationError|string[])
-    {
-        super('validation errors');
-        this.data = errors;
-    }
-}
 
 function validateValue(value:any, path:string, validators:Array<Function>, data:any)
 {
@@ -24,37 +9,24 @@ function validateValue(value:any, path:string, validators:Array<Function>, data:
         if(!blank || validator['nullable']) return validator(value, path, data, {})
         return Promise.resolve();
     });
-    return Promise.all(result).then(function (errors)
-    {
+    return Promise.all(result).then((errors)=>
+    { 
         return errors.filter(function (error)
         {
-            return error !== undefined && error !== null;
+            return error != null;
         });
-    }).then(function (err)
+    }).then((err)=>
     {
         return err.length == 0 ? Promise.resolve() : Promise.reject(err);
     });
 
 }
 
-export function validate(data:any={}, rules:any={})
+export function validate(data:object, rules:IValidationRules={})
 {
-
-    if(Array.isArray(rules))
-    {
-        return validateValue(data, '', rules, data).then(()=>
-        {
-            return null;
-        })
-        .catch((err)=>
-        {
-            return Promise.reject(new ValidationException(err));
-        });
-    }
-
     let errors = {};
 
-    let promises = Object.keys(rules).map(function (key)
+    let promises = Object.keys(rules).map((key:string)=>
     {
         let val = getIn(data, key);
 
@@ -64,12 +36,36 @@ export function validate(data:any={}, rules:any={})
         });
     });
 
-    return Promise.all(promises).then(function ()
+    return Promise.all(promises).then(()=>
     {
         if (Object.keys(errors).length == 0) return;
         return Promise.reject(new ValidationException(errors));
     });
 }
+
+interface IValidationRules {
+    [key:string]: IValidationRule[]
+}
+
+type IValidationRule  = (value:any, key:string, data:any)=> (void|string)|Promise<string|void>
+
+export class ValidationException extends Error
+{
+
+    data:ValidationError;
+
+    statusCode = 422;
+
+    type = 'Validation';
+
+    constructor(errors:ValidationError)
+    {
+        super('validation errors');
+        this.data = errors;
+        Object.setPrototypeOf(this, ValidationException.prototype);
+    }
+}
+
 
 export interface ValidationError
 {

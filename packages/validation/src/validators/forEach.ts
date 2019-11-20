@@ -3,7 +3,7 @@ import { setIn } from "../common";
 
 export function forEach(rules)
 {
-    return function(val, key)
+    return function(val:any, key:string)
     {
         if(Array.isArray(val) === false) return;
         let errors = {};
